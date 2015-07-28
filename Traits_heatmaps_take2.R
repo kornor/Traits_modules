@@ -109,7 +109,7 @@ cormat4 <- read.table("LncMod_cor_MetaMod.txt", sep = "\t",
 cormat5 <- read.table("LncMod_cor_MetaMod_trimmed.txt", sep = "\t",
                       header = TRUE, row.names = 1)
 
-par(oma = c(2,2,2,2))
+par(oma = c(2,2,2,3))
 rowstrip <- c("Turquoise", "Yellow","Green","Magenta")
 colstrip <- c("Blue","Brown", "Green", "Tan", "Yellow")
 
@@ -120,4 +120,4 @@ heatmap.2(as.matrix(cormat5),dendrogram="none",
           density.info="none", trace="none",
           cexRow=1 ,cexCol=1, srtCol = 75,
           main = "Correlation between \n LNC modules and EXP modules",
-          rowsep = 1:nrow(cormat4), colsep = 1:ncol(cormat4), sepcolor = "grey")
+          rowsep = 1:nrow(cormat5), colsep = 1:ncol(cormat5), sepcolor = "grey")
