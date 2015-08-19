@@ -191,7 +191,7 @@ pam50 <- read.table("Pam50_geneList.txt", sep = "\t", header = TRUE)
  write.table(meta_ave, "Lehmann_METABRIC.txt", sep = "\t")
  ##Try correlations again
  
- ### try with the TCGA pam50
+ ### try with the 
  nGenes = ncol(ME_2A);
  nSamples = nrow(ME_2A);
  moduleTraitCor5 = cor(ME_2A, meta_ave, use = "p");
@@ -397,4 +397,94 @@ pam50 <- read.table("Pam50_geneList.txt", sep = "\t", header = TRUE)
           main = "Expression of Lehmann subtype by module (TCGA)")
  
  dev.off() 
+ 
+########################################################################
+ ######## the perou sets
+ 
+ 
+ 
+ #### load the individual pos and neg 
+ ##  Perou  signatures and subtset the METABRIC set
+ 
+ posCR <- read.table("Perou_high_pCR.txt", sep = "\t", header = TRUE)
+ ### POS
+ list <- intersect(rownames(datExpr2), posCR[,1])
+ pos_m <- datExpr2[list,]
+ ### NEG
+ negCR <- read.table("Perou_low_pCR.txt", sep = "\t", header = TRUE)
+ 
+ list <- intersect(rownames(datExpr2), negCR[,1])
+ neg_m <- datExpr2[list,]
+ 
+ 
+ ####get the mean centred ave of all of these sample
+ # create function to center : 'colMeans()'
+ center_colmeans <- function(x) {
+   xcenter = colMeans(x)
+   x - rep(xcenter, rep.int(nrow(x), ncol(x)))
+ }
+ 
+ centre_t <- center_colmeans(t(pos_m))
+ 
+ meta_ave1 <- as.data.frame(rowMeans(centre_t))
+ 
+ rownames(meta_ave1) <- colnames(pos_m) 
+ colnames(meta_ave1)[1] <- "Pos CR signature"
+ 
+############# for the neg
+ centre_t <- center_colmeans(t(neg_m))
+ 
+ meta_ave1$Neg_CR_signature <- rowMeans(centre_t)
+ 
+ rownames(meta_ave1) <- colnames(neg_m) 
+ colnames(meta_ave1)[2] <- "Neg CR signature"
+
+################# make it into one data frame and then save it out
+ 
+meta_ave$Neg_CR_signature <- meta_ave1
+ 
+write.table(meta_ave, "Perou_sig_metabric.txt", sep = "\t")
+ ########## do the correlation test
+ 
+ 
+ ### try with the 
+ nGenes = ncol(ME_2A);
+ nSamples = nrow(ME_2A);
+ moduleTraitCor5 = cor(ME_2A, meta_ave1, use = "p");
+ moduleTraitPvalue5 = corPvalueStudent(moduleTraitCor5, nSamples);
+ 
+ 
+ pdf("Heat_perou_subtype_meta.pdf",height=8,width=10)
+ fontsize = 10
+ 
+ ## recall that setting treeheight_col or _row to '0' will remove 
+ ##dendro for that side
+ pheatmap(t(moduleTraitCor5), 
+          color = colorRampPalette(rev(brewer.pal(n = 10, name = "RdYlBu")))(100), 
+          kmeans_k = NA, breaks = NA, border_color = "grey60",
+          cellwidth = NA, cellheight = NA, scale = "none", 
+          cluster_rows = TRUE, cluster_cols = TRUE, 
+          fontsize_row = 10,
+          annotation_legend = TRUE, drop_levels = TRUE, 
+          show_rownames = T,show_colnames = T, 
+          main = "Expression of Perou signature by module (METABRIC)")
+ 
+ dev.off() 
+ 
+
+ 
+ 
+################## matching different subtypes
+ 
+ 
+ mods <- as.data.frame(modules1)
+ 
+ rownames(mods) <- rownames(datExpr1)
+ 
+ match <- intersect(rownames(mes_m), rownames(mods))
+ mes_m$module <- mods[match,]
+ 
+ count(mes_m$module)
+ 
+ 
  
