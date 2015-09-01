@@ -3,7 +3,7 @@
 
 ### differnt working directory for ease
 
-setwd("~/Bioinformatics Work/Meth & RNA/Traits_Modules_Work")
+setwd("~/Bioinformatics Work/Meth & RNA/Module exploration/Traits_Modules_Work")
 
 ### Load libraries
 

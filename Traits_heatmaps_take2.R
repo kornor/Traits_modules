@@ -3,7 +3,7 @@
 
 ### differnt working directory for ease
 
-setwd("~/Bioinformatics Work/Meth & RNA/Traits_Modules_Work")
+setwd("~/Bioinformatics Work/Meth & RNA/Module exploration/Traits_Modules_Work")
 
 ### Load libraries
 
@@ -121,3 +121,95 @@ heatmap.2(as.matrix(cormat5),dendrogram="none",
           cexRow=1 ,cexCol=1, srtCol = 75,
           main = "Correlation between \n LNC modules and EXP modules",
           rowsep = 1:nrow(cormat5), colsep = 1:ncol(cormat5), sepcolor = "grey")
+
+
+############## for the methylation work
+
+cormat1 <- read.table("All_meth_trait_corr.txt", sep = "\t", header = TRUE, row.names = 1)
+
+
+### heatmap of all
+pdf("Heat_test_meth3.pdf",height=8,width=10)
+fontsize = 10
+
+pheatmap(t(cormat1), color = colorRampPalette(rev(brewer.pal(n = 10, name = "RdYlBu")))(50), 
+         kmeans_k = NA, breaks = NA, border_color = "grey60",
+         cellwidth = NA, cellheight = NA, scale = "none", 
+         cluster_rows = TRUE, cluster_cols = TRUE, fontsize_row = 10,
+         annotation_legend = TRUE, drop_levels = TRUE, 
+         show_rownames = F,show_colnames = T, 
+         treeheight_col = 0,
+         main = "Methylation of gene promoters by module")
+dev.off()
+
+### subset only the basal like
+
+cormat_b <- cormat1[1:3,]
+
+cormat_l <- cormat1[4:5,]
+
+cormat_n <- cormat1[6:7,]
+
+##comparison of opposites
+cormat_op <- cormat1[c(2,4),]
+
+pdf("Heat_test_meth_basal.pdf",height=8,width=8)
+fontsize = 10
+
+pheatmap(t(cormat_b), color = colorRampPalette(rev(brewer.pal(n = 10, name = "RdYlBu")))(50), 
+         kmeans_k = NA, breaks = NA, border_color = "grey60",
+         cellwidth = NA, cellheight = NA, scale = "none", 
+         cluster_rows = TRUE, cluster_cols = FALSE, fontsize_row = 10,
+         annotation_legend = TRUE, drop_levels = TRUE, 
+         show_rownames = F,show_colnames = T, 
+         treeheight_col = 0,
+         main = "Methylation of gene promoters by module")
+dev.off()
+
+pdf("Heat_test_meth_basal1.pdf",height=8,width=8)
+par(oma= c(3,1,1,1))
+heatmap.2(as.matrix(t(cormat_b)),dendrogram="row", 
+          notecol="black",col=colorRampPalette(rev(brewer.pal(n = 10, name = "RdYlBu")))(100),
+          scale="none",key=TRUE, keysize=1.5,
+          density.info="none", trace="none",
+          labRow = NA, cexRow=1, srtCol = 75, cexCol = 1,
+          main = "Methylation of gene promoter by module")
+dev.off()
+
+
+####Luminals
+pdf("Heat_test_meth_luminal1.pdf",height=8,width=8)
+par(oma= c(3,1,1,1))
+heatmap.2(as.matrix(t(cormat_l)),dendrogram="row", 
+          notecol="black",col=colorRampPalette(rev(brewer.pal(n = 10, name = "RdYlBu")))(100),
+          scale="none",key=TRUE, keysize=1.5,
+          density.info="none", trace="none",
+          labRow = NA, cexRow=1, srtCol = 75, cexCol = 1,
+          main = "Methylation of gene promoter by module")
+dev.off()
+
+
+####Normals
+pdf("Heat_test_meth_normal1.pdf",height=8,width=8)
+par(oma= c(3,1,1,1))
+heatmap.2(as.matrix(t(cormat_n)),dendrogram="row", 
+          notecol="black",col=colorRampPalette(rev(brewer.pal(n = 10, name = "RdYlBu")))(100),
+          scale="none",key=TRUE, keysize=1.5,
+          density.info="none", trace="none",
+          labRow = NA, cexRow=1, srtCol = 75, cexCol = 1,
+          main = "Methylation of gene promoter by module")
+dev.off()
+
+
+
+####Opposites
+pdf("Heat_test_meth_opposites1.pdf",height=8,width=8)
+par(oma= c(3,1,1,1))
+heatmap.2(as.matrix(t(cormat_op)),dendrogram="row", 
+          notecol="black",col=colorRampPalette(rev(brewer.pal(n = 10, name = "RdYlBu")))(100),
+          scale="none",key=TRUE, keysize=1.5,
+          density.info="none", trace="none",
+          labRow = NA, cexRow=1, srtCol = 75, cexCol = 1,
+          main = "Methylation of gene promoter by module")
+dev.off()
+
